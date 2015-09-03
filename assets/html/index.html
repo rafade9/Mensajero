@@ -1,0 +1,51 @@
+<div ng-controller="MainController as main">
+    <div class="row">
+        <div class="col-md-2">
+            <img src="/images/microbians_logos_angrydog-big.png" class="img-rounded" width="204" height="125">
+        </div>
+        <div class="col-md-9">
+            <form class="form-inline" ng-submit="subscribe(username)">
+                <br>
+                <div class="form-group">
+                    <label for="exampleInputEmail1">Username</label>
+                    <input type="text" class="form-control" id="exampleInputEmail1" ng-model="username" placeholder="Username" required>
+                </div>
+                <button type="submit" class="btn btn-default">Ingresar</button>
+            </form>
+        </div>
+    </div>
+    <br>
+    <br>
+    <div class="row" ng-if="subscribed">
+        <div class="col-md-4">
+            <div class="panel panel-primary">
+                <div class="panel-heading">Users</div>
+                <div class="list-group">
+                    <a href="#" class="list-group-item" ng-repeat="user in users">{{user.user}}</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-8">
+            <div class="panel panel-primary">
+                <div class="panel-heading">Principal</div>
+                <table class="table table-striped table-condensed">
+                    <tr ng-repeat="msg in msgs | orderBy:'-id' | limitTo: 15">
+                        <td>{{msg.user}}</td>
+                        <td ng-if="msg.tipo===1 || msg.tipo===3"><i>{{msg.msg}}</i>
+                        </td>
+                        <td ng-if="msg.tipo!=1 && msg.tipo!=3">{{msg.msg}}</td>
+                    </tr>
+                </table>
+                <div class="panel-footer">
+                    <form class="form-inline">
+                        <div class="form-group">
+                            <label for="msgGeneralTxt">Mensaje</label>
+                            <input type="text" class="form-control" id="msgGeneralTxt" required>
+                        </div>
+                        <button type="submit" class="btn btn-default">Enviar</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
