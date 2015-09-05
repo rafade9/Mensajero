@@ -2,64 +2,45 @@
     var mainApp = angular.module('mainApp', []);
     mainApp.controller('MainController', function ($scope, $http) {
 
-        $scope.init = function () {
-            console.log("En init");
-            io.socket.get('/api/mensaje/subscribe', function (res) {
-                console.info("res:::::  ", res)
-
-            });
-        }
-
-        $scope.users = [{
-            user: 'Rafa'
-        }, {
-            user: 'Robocop'
-        }, {
-            user: 'Ironman'
-        }]
-
-        $scope.msgs = [{
-            id: 1,
-            createdAt: '2015 - 09 - 02 T19: 05: 00.902 Z',
-            user: 'Rafa',
-            tipo: 1,
-            msg: 'Se ha conectado'
-        }, {
-            id: 2,
-            createdAt: '2015 - 09 - 02 T19: 06: 00.902 Z',
-            user: 'Robocop',
-            tipo: 2,
-            createdAt: '2015 - 09 - 02 T19: 07: 00.902 Z',
-            msg: 'Hola, Rafa'
-        }, {
-            id: 3,
-            createdAt: '2015 - 09 - 02 T19: 08: 00.902 Z',
-            user: 'Rafa',
-            tipo: 2,
-            msg: 'Hola, Robocop'
-        }, {
-            id: 4,
-            createdAt: '2015 - 09 - 02 T19: 09: 00.902 Z',
-            user: 'Ironman',
-            tipo: 3,
-            msg: 'Se ha ido'
-        }]
+        $scope.users = [];
+        $scope.msgs = [];
 
         $scope.subscribe = function (username) {
             $scope.subscribed = true;
 
-            io.socket.get('/api/mensaje/subscribe', function (res) {
+            io.socket.post('/mensaje/subscribe', {
+                username: username
+            }, function (res) {
                 console.info("res:::::  ", res)
-
+                $scope.users = res.users;
+                $scope.$digest();
+                io.socket.on('updatedUsers', function (obj) {
+                    console.log(angular.toJson(obj));
+                    $scope.users = obj;
+                    $scope.$digest();
+                });
+                io.socket.on('mensajes', function (m) {
+                    $scope.msgs.push(m);
+                    $scope.$digest();
+                });
+                io.socket.on('privateMesage', function (m) {
+                    console.log(m.msgP);
+                });
             });
+        };
 
-            $scope.msgs.push({
-                id: 5,
-                createdAt: '2015 - 09 - 02 T19: 11: 00.902 Z',
-                user: username,
-                tipo: 1,
-                msg: 'Se ha conectado'
+        $scope.privateMsg = function (user) {
+            console.log("Se va a enviar un mensaje privado a: " + user.username);
+            io.socket.post('/mensaje/privateMsg', {
+                uid: user.uid
+            }, function (res) {});
+        };
+
+        $scope.leaveChat = function () {
+            io.socket.get('/mensaje/leave', function (res) {
+                $scope.subscribed = false;
+                alert("Ha dejado la sala");
             });
-        }
+        };
     });
 })();

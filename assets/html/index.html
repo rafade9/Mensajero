@@ -19,11 +19,17 @@
     <div class="row" ng-if="subscribed">
         <div class="col-md-4">
             <div class="panel panel-primary">
-                <div class="panel-heading">Users</div>
-                <div class="list-group">
-                    <a href="#" class="list-group-item" ng-repeat="user in users">{{user.user}}</a>
-                </div>
+                <div class="panel-heading">Users </div>
+                <table class="table table-striped table-condensed">
+                    <tr ng-repeat="user in users">
+                        <td>{{user.username}}</td>
+                        <td>
+                            <button type="button" class="btn btn-info" ng-click="privateMsg(user)">Mensaje privado</button>
+                        </td>
+                    </tr>
+                </table>
             </div>
+            <button type="button" class="btn btn-danger" ng-click="leaveChat()">Salir</button>
         </div>
         <div class="col-md-8">
             <div class="panel panel-primary">
