@@ -24,10 +24,17 @@
                     $scope.$digest();
                 });
                 io.socket.on('privateMesage', function (m) {
-                    console.log(m.msgP);
+                    alert(m.msgP);
+                    //console.log(m.msgP);
                 });
             });
         };
+
+        $scope.generalMsg = function (msg) {
+            io.socket.post('/mensaje/generalMsg', {
+                msg: msg
+            }, function (res) {});
+        }
 
         $scope.privateMsg = function (user) {
             console.log("Se va a enviar un mensaje privado a: " + user.username);
@@ -39,6 +46,7 @@
         $scope.leaveChat = function () {
             io.socket.get('/mensaje/leave', function (res) {
                 $scope.subscribed = false;
+                $scope.$digest();
                 alert("Ha dejado la sala");
             });
         };

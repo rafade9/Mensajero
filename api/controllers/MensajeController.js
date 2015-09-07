@@ -36,11 +36,28 @@ module.exports = {
         }
     },
 
+    generalMsg: function (req, res) {
+        if (req.socket) {
+            var data = req.params.all();
+            console.log(data);
+            console.log(recoverCurrentUser(req.socket.id));
+            sails.sockets.broadcast("chat", "mensajes", {
+                user: recoverCurrentUser(req.socket.id),
+                msg: data.msg,
+                tipo: 2
+            });
+            res.json({
+                code: 1
+            });
+        }
+    },
+
     privateMsg: function (req, res) {
         if (req.isSocket) {
             var data = req.params.all();
             console.log("Entra a msg privado para: " + data.uid);
             sails.sockets.emit(data.uid, 'privateMesage', {
+                user: recoverCurrentUser(req.socket.id),
                 msgP: 'Hola'
             });
             res.json({
@@ -68,5 +85,13 @@ module.exports = {
                 code: 1
             });
         }
+    }
+};
+
+var recoverCurrentUser = function (uid) {
+    console.log("Entra a recuperar usuario con id: " + uid);
+    for (var u in users) {
+        if (users[u].uid === uid)
+            return users[u].username;
     }
 };
