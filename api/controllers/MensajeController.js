@@ -14,7 +14,6 @@ module.exports = {
 
             var roomName = 'chat';
             sails.sockets.join(req.socket, roomName);
-            console.log(sails.sockets.subscribers());
             users.push({
                 username: user.username,
                 uid: req.socket.id
@@ -39,9 +38,8 @@ module.exports = {
     generalMsg: function (req, res) {
         if (req.socket) {
             var data = req.params.all();
-            console.log(data);
-            console.log(recoverCurrentUser(req.socket.id));
             sails.sockets.broadcast("chat", "mensajes", {
+                date: new Date(),
                 user: recoverCurrentUser(req.socket.id),
                 msg: data.msg,
                 tipo: 2
@@ -55,7 +53,6 @@ module.exports = {
     privateMsg: function (req, res) {
         if (req.isSocket) {
             var data = req.params.all();
-            console.log("Entra a msg privado para: " + data.uid);
             sails.sockets.emit(data.uid, 'privateMesage', {
                 user: recoverCurrentUser(req.socket.id),
                 msgP: 'Hola'
@@ -89,7 +86,6 @@ module.exports = {
 };
 
 var recoverCurrentUser = function (uid) {
-    console.log("Entra a recuperar usuario con id: " + uid);
     for (var u in users) {
         if (users[u].uid === uid)
             return users[u].username;

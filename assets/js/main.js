@@ -4,10 +4,11 @@
 
         $scope.users = [];
         $scope.msgs = [];
+        $scope.msgGral = "";
 
         $scope.subscribe = function (username) {
             $scope.subscribed = true;
-
+            $scope.username = '';
             io.socket.post('/mensaje/subscribe', {
                 username: username
             }, function (res) {
@@ -31,9 +32,12 @@
         };
 
         $scope.generalMsg = function (msg) {
+            $scope.msgGral = "";
             io.socket.post('/mensaje/generalMsg', {
                 msg: msg
-            }, function (res) {});
+            }, function (res) {
+                console.log(angular.toJson(res));
+            });
         }
 
         $scope.privateMsg = function (user) {
