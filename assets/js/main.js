@@ -43,6 +43,7 @@
         $scope.privateMsg = function (user) {
             console.log("Se va a enviar un mensaje privado a: " + user.username);
             io.socket.post('/mensaje/privateMsg', {
+                msg: 'Hola',
                 uid: user.uid
             }, function (res) {});
         };

@@ -55,7 +55,7 @@ module.exports = {
             var data = req.params.all();
             sails.sockets.emit(data.uid, 'privateMesage', {
                 user: recoverCurrentUser(req.socket.id),
-                msgP: 'Hola'
+                msgP: data.msg
             });
             res.json({
                 code: 1
