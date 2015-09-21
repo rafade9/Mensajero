@@ -21,6 +21,7 @@ module.exports = {
             sails.sockets.broadcast("chat", "updatedUsers", users);
             sails.sockets.broadcast("chat", "mensajes", {
                 msg: user.username + ' se ha conectado.',
+                date: new Date(),
                 tipo: 1
             });
             res.json({
@@ -71,6 +72,7 @@ module.exports = {
                 if (users[u].uid === req.socket.id) {
                     sails.sockets.broadcast("chat", "mensajes", {
                         msg: users[u].username + ' se ha desconectado.',
+                        date: new Date(),
                         tipo: 1
                     });
                     userToRemove = users[u];
